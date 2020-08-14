@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "53611434411",
+    "firebase_url": "https://aol-project-timeline.firebaseio.com",
+    "project_id": "aol-project-timeline",
+    "storage_bucket": "aol-project-timeline.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53611434411:android:867d012c9ddd0cb65c42ee",
+        "android_client_info": {
+          "package_name": "com.example.aol_progress_timeline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "53611434411-th5f64u4009aqc49n5br6pnsl46l6d7k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aol_progress_timeline",
+            "certificate_hash": "080f55dfeed2ab7d4ba04cb3f9357a4f09b19757"
+          }
+        },
+        {
+          "client_id": "53611434411-3v7h1gmnb1nd68d729o5uccr4khg8emn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJrgUEmL3jX9jYFvbpTGKLrh9bSrf9Yjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53611434411-3v7h1gmnb1nd68d729o5uccr4khg8emn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
