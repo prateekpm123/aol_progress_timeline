@@ -66,8 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _databaseTest() {
     FirebaseDatabase db = FirebaseDatabase.instance;
-    DatabaseReference dbRef =
-        db.reference().child("project").child("projectName");
+    DatabaseReference dbRef = db.reference().child("project");
     dbRef.once().then((DataSnapshot snapshot) {
       debugPrint(snapshot.value.toString());
       setState(() {
