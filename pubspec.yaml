@@ -29,6 +29,7 @@ dependencies:
   shared_preferences: ^0.5.8
   google_sign_in: ^4.5.1
   data_tables: ^1.0.3
+  percent_indicator: ^2.1.5
 
 
   # The following adds the Cupertino Icons font to your application.
