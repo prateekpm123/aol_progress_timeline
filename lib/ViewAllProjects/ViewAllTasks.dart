@@ -1,13 +1,11 @@
 //This page is under manager section
-
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_timeline/CommonWidgets.dart';
-import 'package:project_timeline/CreateNewProject/CreateNewTask.dart';
-import 'package:project_timeline/CreateNewProject/EditTask.dart';
-import 'package:project_timeline/CreateNewProject/YourCreatedProjects.dart';
 
+
+import '../theme.dart';
 class ViewAllTasks extends StatefulWidget {
 
   final String projectID;
@@ -40,6 +38,8 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
         List temp=alltasks.values.toList();
         debugPrint(temp[0]["taskName"]);
         debugPrint(temp[0]["status"]);
+        debugPrint(temp[0]["taskDescription"]);
+        debugPrint(temp[0]["taskID"]);
 
       });
 
@@ -47,19 +47,6 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
 
   }
 
-  deleteTask(String taskID)
-  {
-    try {
-      databaseReference.child("projects").child(widget.projectID)
-          .child("tasks")
-          .child(taskID)
-          .remove();
-      showToast("Removed Sucessfully");
-    }
-    catch(e){
-      showToast("Check your internet");
-    }
-  }
 
 
   @override
@@ -71,17 +58,18 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
 
   Widget displayProject(int index)
   {
+
     return Container(
 
 
         child: Card(
 
-            elevation: 4,
-            margin: EdgeInsets.only(left:15 ,right:15 ,top: 7,bottom: 7),
+            elevation: 7,
+            margin: EdgeInsets.only(left:15 ,right:15 ,top: 15,bottom: 7),
             semanticContainer: true,
             color: Colors.amberAccent.shade50,
-
             child: Container(
+
                 child:Column(
                   children: <Widget>[
 
@@ -93,32 +81,59 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
                         Container(
 
                             width: MediaQuery.of(context).size.width/1.4,
-
                             padding: EdgeInsets.all(5),
                             child:Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
 
                               children: <Widget>[
 
+                                StepProgressIndicator(
+                                  totalSteps: 10,
+                                  currentStep: (double.parse(allTasks[index]["progress"].toString())/10).round(),
+                                  size: 20,
+                                  selectedColor: Colors.amber,
+                                  unselectedColor: Colors.black,
+                                  roundedEdges: Radius.circular(10),
+                                ),
 
 
+                                Center(
+                                  child: Text(
+                                    "Progress" +": "+allTasks[index]["progress"].toString()+"%",
+                                    overflow: TextOverflow.clip,
+                                    maxLines: 2,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic
+                                    ),
+
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Task ID" +": "+allTasks[index]["taskID"],
+                                  overflow: TextOverflow.clip,
+                                  maxLines: 2,
+                                  softWrap: false,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    color: Colors.indigo
+                                  ),
+
+                                ),
                                 Text(
                                   "task Name: "+allTasks[index]["taskName"],
                                   overflow: TextOverflow.clip,
                                   maxLines: 1,
                                   softWrap: false,
-                                  style: TextStyle(fontSize: 14,),
-                                ),
-                                SizedBox(height: 5,),
-
-
-                                Text(
-                                  "Progress" +": "+allTasks[index]["progress"].toString()+"%",
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: false,
-                                  style: TextStyle(fontSize: 14),
-
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    color: Colors.redAccent
+                                  ),
                                 ),
 
 
@@ -129,10 +144,25 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
                                   overflow: TextOverflow.clip,
                                   maxLines: 2,
                                   softWrap: false,
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold
+                                  ),
 
                                 ),
+                                SizedBox(width: 10,),
 
+                                Text(
+                                  "Task Description" +": "+allTasks[index]["taskDescription"],
+                                  overflow: TextOverflow.clip,
+                                  maxLines: 2,
+                                  softWrap: false,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold
+                                  ),
+
+                                ),
 
 
                               ],
@@ -140,29 +170,7 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
                             )
                         ),
 
-                        Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child:Column(
-                              children: <Widget>[
 
-
-                                SizedBox(width: 10,),
-
-
-                                IconButton(
-                                  icon: Icon(Icons.arrow_forward_ios),
-                                  color: Colors.grey,
-                                  onPressed: () {
-
-                                  },
-                                ),
-
-
-
-
-                              ],
-                            )
-                        )
 
                       ],
                     )
@@ -178,11 +186,7 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-
-      appBar: AppBar(
-
-        title: Text("View All Tasks"),
-      ),
+      backgroundColor: primaryColor,
 
       body: StreamBuilder(
           stream: databaseReference.child("projects").child(widget.projectID).child("tasks").onValue,
@@ -195,46 +199,90 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
               data.forEach(
                     (index, data) => allTasks.add({"key": index, ...data}),
               );
-
-
-
-              return
-                new Column(
-                  children: <Widget>[
-
-
-
+              return new Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.navigate_before,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
                     Container(
-                        margin: EdgeInsets.only(left:15 ,right:15 ,top: 7,bottom: 7),
-                        color: Colors.amberAccent.shade50,
-                        child:Column(children: <Widget>[
+                      height: 100,
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'TASKS',
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           Text(
                             "Project Name" +": "+projectName,
-                            style: TextStyle(fontSize: 18),
-
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              color: Colors.indigo[900]
+                            ),
                           ),
-                          SizedBox(height: 10,),
-
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           Text(
                             "Site Address" +": "+siteAddress,
-                            style: TextStyle(fontSize: 16),
-
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.indigo[900]
+                            ),
                           ),
-                        ],)
+                        ],
+                      ),
                     ),
-
-
-
-                    new Expanded(
-                      child: new ListView.builder(
-                        itemCount: allTasks.length,
-                        itemBuilder: (context, index) {
-                          return displayProject(index);
-                        },
+                    SizedBox(height: 8),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(50),topRight: Radius.circular(50)),
+                        ),
+                        child: new ListView.builder(
+                          itemCount: allTasks.length,
+                          itemBuilder: (context, index) {
+                            return displayProject(index);
+                          },
+                        ),
                       ),
                     ),
                   ],
-
                 );
             } else {
               return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),));

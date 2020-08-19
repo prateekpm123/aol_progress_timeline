@@ -1,8 +1,7 @@
-import 'package:aol_progress_timeline/data.dart';
-import 'package:aol_progress_timeline/parts/cardsection.dart';
-import 'package:aol_progress_timeline/parts/header.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:aol_progress_timeline/theme.dart';
 import 'package:flutter/material.dart';
+
+import 'ViewAllProjects/ViewAllProjects.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -22,12 +21,27 @@ class ProgressPage extends StatelessWidget {
           SizedBox(height: 20),
           Container(
             height: 120,
-            child: Header(),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'PROJECTS',
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Expanded(
-            flex: 2,
-            child: CardSection(),
+            flex: 1,
+            child: ViewAllProjects(),
           ),
+
         ],
       ),
     );

@@ -1,11 +1,9 @@
-//This page is under manager section
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_timeline/CreateNewProject/CreateNewProject.dart';
-import 'package:project_timeline/CreateNewProject/YourCreatedTasks.dart';
-import 'package:project_timeline/ViewAllProjects/ViewAllTasks.dart';
+import 'package:aol_progress_timeline/ViewAllProjects/ViewAllTasks.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:aol_progress_timeline/theme.dart';
 
 
 class ViewAllProjects extends StatefulWidget {
@@ -20,10 +18,6 @@ class _ViewAllProjectsState extends State<ViewAllProjects> {
   final databaseReference = FirebaseDatabase.instance.reference();
   List allProjects=List() ;
 
-  String uid="8YiMHLBnBaNjmr3yPvk8NWvNPmm2";
-
-
-
   @override
   void initState() {
     super.initState();
@@ -32,130 +26,140 @@ class _ViewAllProjectsState extends State<ViewAllProjects> {
 
   Widget displayProject(int index)
   {
-    return Container(
-
-
-        child: Card(
-
-            elevation: 4,
-            margin: EdgeInsets.only(left:15 ,right:15 ,top: 7,bottom: 7),
-            semanticContainer: true,
-            color: Colors.amberAccent.shade50,
-
-            child: Container(
-                child:Column(
-                  children: <Widget>[
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                      children: <Widget>[
-
-                        Container(
-
-                            width: MediaQuery.of(context).size.width/1.4,
-
-                            padding: EdgeInsets.all(5),
-                            child:Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
-                              children: <Widget>[
-
-
-
-                                Text(
-                                  "Project: "+allProjects[index]["projectName"],
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                  style: TextStyle(fontSize: 14,),
-                                ),
-                                SizedBox(height: 5,),
-
-                                Text(
-                                  "Site Address: " +allProjects[index]["siteAddress"],
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: false,
-                                  style: TextStyle(fontSize: 14),
-
-                                ),
-
-                                Text(
-                                  "Supervisor Name" +": "+allProjects[index]["supervisorName"],
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: false,
-                                  style: TextStyle(fontSize: 14),
-
-                                ),
-
-                                Row(
-                                  children: <Widget>[
-
-                                    Text(
-                                      "Progress" +": "+allProjects[index]["progress"].toString()+"%",
-                                      overflow: TextOverflow.clip,
-                                      maxLines: 2,
-                                      softWrap: false,
-                                      style: TextStyle(fontSize: 14),
-
-                                    ),
-
-
-                                    SizedBox(width: 10,),
-
-                                    Text(
-                                      "Status" +": "+allProjects[index]["status"],
-                                      overflow: TextOverflow.clip,
-                                      maxLines: 2,
-                                      softWrap: false,
-                                      style: TextStyle(fontSize: 14),
-
-                                    ),
-
-
-                                  ],
-                                ),
-
-
-
-                              ],
-
-                            )
+    return Stack(
+      children: [
+        Positioned.fill(
+          top: 150,
+          bottom: -190,
+          child: Container(
+            decoration: BoxDecoration(
+                boxShadow: customShadow,
+                shape:BoxShape.circle,
+                color:Colors.white38
+            ),
+          ),
+        ),
+        Positioned.fill(
+          left: -300,
+          top: -2,
+          bottom: -80,
+          child: Container(
+            decoration: BoxDecoration(
+                boxShadow: customShadow,
+                shape:BoxShape.circle,
+                color:Colors.white38
+            ),
+          ),
+        ),
+        Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircularPercentIndicator(
+                      radius: 120.0,
+                      lineWidth: 13.0,
+                      animation: true,
+                      percent: double.parse(allProjects[index]["progress"].toString())/100,
+                      center: new Text(
+                        allProjects[index]["progress"].toString()+"%",
+                        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                      ),
+                      circularStrokeCap: CircularStrokeCap.round,
+                      progressColor: Colors.deepPurple,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        height: 50,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          boxShadow: customShadow,
+                          borderRadius: BorderRadius.circular(15),
                         ),
-
-                        Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child:Column(
-                              children: <Widget>[
-
-
-
-
-                                IconButton(
-                                  icon: Icon(Icons.arrow_forward_ios),
-                                  color: Colors.grey,
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => ViewAllTasks(projectID:allProjects[index]["projectID"] ,)),
-                                    );
-
-                                  },
-                                ),
-
-
-                              ],
-                            )
-                        )
-
-                      ],
-                    )
+                        child: IconButton(
+                          color: Colors.deepPurple,
+                          icon: Icon(Icons.navigate_next),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ViewAllTasks(projectID:allProjects[index]["projectID"] ,)),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   ],
-                )
-            )
-        )
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 80,left: 5),
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Project Name:',
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Text(
+                        allProjects[index]["projectName"],
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        'Project Supervisor: '+allProjects[index]["supervisorName"],
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Site Address: ',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Text(
+                        allProjects[index]["siteAddress"],
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Project Status: '+allProjects[index]["status"],
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -163,14 +167,8 @@ class _ViewAllProjectsState extends State<ViewAllProjects> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-
-      appBar: AppBar(
-
-        title: Text("All Projects"),
-      ),
-
-      body: StreamBuilder(
+    List numbers = [1,2,3];
+    return new StreamBuilder(
           stream: databaseReference.child("projects").onValue,
           builder: (context, snap) {
             if (snap.hasData &&
@@ -182,34 +180,66 @@ class _ViewAllProjectsState extends State<ViewAllProjects> {
                     (index, data) => allProjects.add({"key": index, ...data}),
               );
 
-//              for (int i = 0; i < allProjects.length; i++) {
-//                if(allProjects[i]["managerUID"]==uid)
-//                  myCreatedProjects.add(allProjects[i]);
-//              }
-              return
-                new Column(
-                  children: <Widget>[
-
-
-                    new Expanded(
-                      child: new ListView.builder(
-                        itemCount: allProjects.length,
-                        itemBuilder: (context, index) {
-                          return displayProject(index);
-                        },
-                      ),
+              return new Column(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child:
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(top: 15,bottom: 230,right: 10,left: 20),
+                          decoration: BoxDecoration(
+                            color: primaryColor,
+                            boxShadow: customShadow,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: new ListView.builder(
+                                  itemCount: allProjects.length,
+                                  itemBuilder: (context, index) {
+                                    return displayProject(index);
+                                  },
+                                ),
+                              ),
+                              /*
+                              Expanded(
+                                flex: 1,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: numbers.length,
+                                  itemBuilder: (context,i){
+                                    return Container(
+                                      width: 250,
+                                      margin: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: primaryColor,
+                                        boxShadow: customShadow,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Align(
+                                            child: Text(numbers[i].toString()),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              */
+                            ],
+                          ),
+                        )
                     ),
                   ],
-
                 );
             } else {
               return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),));
             }
-          }),
-
-
-
-    );
+          });
   }
 
 }
