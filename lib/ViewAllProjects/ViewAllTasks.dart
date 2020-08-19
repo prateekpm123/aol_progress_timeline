@@ -1,8 +1,9 @@
 //This page is under manager section
-import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 
 import '../theme.dart';
@@ -87,13 +88,15 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
 
                               children: <Widget>[
 
-                                StepProgressIndicator(
-                                  totalSteps: 10,
-                                  currentStep: (double.parse(allTasks[index]["progress"].toString())/10).round(),
-                                  size: 20,
-                                  selectedColor: Colors.amber,
-                                  unselectedColor: Colors.black,
-                                  roundedEdges: Radius.circular(10),
+                                LinearPercentIndicator(
+                                  percent: double.parse(allTasks[index]["progress"].toString())/100,
+                                  center: Text(allTasks[index]["progress"].toString()+"%"),
+                                  progressColor: Colors.green,
+                                  linearStrokeCap: LinearStrokeCap.roundAll,
+                                  animationDuration: 5000,
+                                  lineHeight: 20,
+                                  animation: true,
+
                                 ),
 
 
@@ -111,19 +114,7 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
 
                                   ),
                                 ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "Task ID" +": "+allTasks[index]["taskID"],
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: false,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    color: Colors.indigo
-                                  ),
-
-                                ),
+                                SizedBox(height: 10,),
                                 Text(
                                   "task Name: "+allTasks[index]["taskName"],
                                   overflow: TextOverflow.clip,
@@ -141,19 +132,6 @@ class _ViewAllTasksState extends State<ViewAllTasks> {
 
                                 Text(
                                   "Status" +": "+allTasks[index]["status"],
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: false,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold
-                                  ),
-
-                                ),
-                                SizedBox(width: 10,),
-
-                                Text(
-                                  "Task Description" +": "+allTasks[index]["taskDescription"],
                                   overflow: TextOverflow.clip,
                                   maxLines: 2,
                                   softWrap: false,
